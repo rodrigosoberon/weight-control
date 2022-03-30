@@ -4,25 +4,26 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Control de Peso</title>
   </head>
-  <body>
-    <header>
+  <body class="body">
+    <header class="header">
       <h1>🏋️‍♂️ Control de peso</h1>
       <p>👨‍💻 Nombre Usuario</p>
     </header>
-    <nav>
-      <button>➡</button>
-      <ul>
-        <li>Mis Datos</li>
-        <li>Configuración</li>
-        <li>Exportar</li>
-        <li>Cerrar sesión</li>
-      </ul>
+    <nav class="nav">
+      <button id="flecha">➡</button>
+      <div class="links">
+        <a href="#">Mis Datos</a>
+        <a href="#">Configuración</a>
+        <a href="#">Exportar</a>
+        <a href="#">Cerrar sesión</a>
+      </div>
     </nav>
-    <main>
+    <main class="main">
       <section id="datos">
-        <button>Registrar peso</button>
+        <button id="registrar-peso">Registrar peso</button>
         <p>Mi peso</p>
         <h2>53kg</h2>
         <p>Mi altura</p>
@@ -34,15 +35,14 @@
       </section>
       <section id="graficos">📊📈📉</section>
     </main>
-    <footer>
+    <footer class="footer">
       <p>® 2022 - Control de peso</p>
-      <ul>
-        <li>📺</li>
-        <li>🐦</li>
-        <li>📷</li>
-      </ul>
+      <div>
+        <a href="#">📺</a>
+        <a href="#">🐦</a>
+        <a href="#">📷</a>
+      </div>
     </footer>
-
-    <script src="./scripts/weightControl.js"></script>
+    <!-- <script src="./scripts/weightControl.js"></script> -->
   </body>
 </html>
