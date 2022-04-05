@@ -8,19 +8,56 @@
     <title>Control de Peso</title>
   </head>
   <body class="body">
-    <header class="header">
-      <h1>🏋️‍♂️ Control de peso</h1>
-      <p>👨‍💻 Nombre Usuario</p>
-    </header>
+
+    <!-- * NAV -->
     <nav class="nav">
-      <button id="flecha">➡</button>
-      <div class="links">
-        <a href="#">Mis Datos</a>
-        <a href="#">Configuración</a>
-        <a href="#">Exportar</a>
-        <a href="#">Cerrar sesión</a>
+      <div class="top">
+        <a href="#" class="titulo">
+          <img
+            class="icono"
+            src="./images/weight-scale-solid.svg"
+            alt="Icono balanza"
+          />
+          <p>Control de peso</p>
+        </a>
+        <a
+          href="javascript:void(0);"
+          onclick="mostrarMenu()"
+        >
+          <img class="icono" src="./images/bars-solid.svg" alt="Icono barras" />
+        </a>
+      </div>
+
+      <div id="links">
+        <a href="#"><img
+          class="icono"
+          src="./images/user-solid.svg"
+          alt="Icono usuario"
+        />--nombreUsuario--</a>
+        <a href="#"><img
+          class="icono"
+          src="./images/database-solid.svg"
+          alt="Icono datos"
+        />Mis Datos</a>
+        <a href="#"><img
+          class="icono"
+          src="./images/gears-solid.svg"
+          alt="Icono configuración"
+        />Configuración</a>
+        <a href="#"><img
+          class="icono"
+          src="./images/file-export-solid.svg"
+          alt="Icono exportar"
+        />Exportar</a>
+        <a href="#"><img
+          class="icono"
+          src="./images/rectangle-xmark-solid.svg"
+          alt="Icono cerrar"
+        />Cerrar sesión</a>
       </div>
     </nav>
+
+    <!-- * MAIN -->
     <main class="main">
       <section id="datos">
         <button id="registrar-peso">Registrar peso</button>
@@ -35,14 +72,33 @@
       </section>
       <section id="graficos">📊📈📉</section>
     </main>
+
+    <!-- * FOOTER -->
     <footer class="footer">
       <p>® 2022 - Control de peso</p>
       <div>
-        <a href="#">📺</a>
-        <a href="#">🐦</a>
-        <a href="#">📷</a>
+        <a href="#"><img
+          class="icono"
+          src="./images/youtube-square-brands.svg"
+          alt="Icono youtube"
+        /></a>
+        <a href="#"><img
+          class="icono"
+          src="./images/facebook-square-brands.svg"
+          alt="Icono facebook"
+        /></a>
+        <a href="#"><img
+          class="icono"
+          src="./images/twitter-square-brands.svg"
+          alt="Icono twitter"
+        /></a>
+        <a href="#"><img
+          class="icono"
+          src="./images/instagram-square-brands.svg"
+          alt="Icono instagram"
+        /></a>
       </div>
     </footer>
-    <!-- <script src="./scripts/weightControl.js"></script> -->
+    <script src="./scripts/weightControl.js"></script>
   </body>
 </html>

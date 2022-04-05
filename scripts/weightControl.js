@@ -26,7 +26,16 @@ class Persona {
   }
 }
 
-let nombreUsuario = prompt("Ingrese su nombre:");
+function mostrarMenu() {
+  var x = document.getElementById("links");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+/* let nombreUsuario = prompt("Ingrese su nombre:");
 let alturaUsuario = parseInt(prompt("Ingrese su altura en centímetros (ej: 178):"));
 let pesoUsuario = parseInt(prompt("Ingrese su peso en kilogramos:"));
 
@@ -35,4 +44,4 @@ let imcUsuario = usuario.calcularIndiceMasaCorporal();
 
 console.log("Hola " + usuario.nombre);
 console.log("Tu indince de masa corporal es " + imcUsuario.toFixed(2));
-console.log("Su categoría según índice es " + usuario.determinarCategoria(imcUsuario));
+console.log("Su categoría según índice es " + usuario.determinarCategoria(imcUsuario)); */
