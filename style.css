@@ -4,9 +4,9 @@
 }
 
 .body {
-  height: 100vh;
-  /* display: flex;
-  flex-direction: column; */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav {
@@ -15,7 +15,7 @@
   background-color: aquamarine;
 }
 
-.top{
+.top {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -51,6 +51,7 @@
 }
 
 .main {
+  flex-grow: 1;
   grid-area: main;
   display: flex;
   flex-direction: column;
@@ -59,8 +60,32 @@
   color: aliceblue;
 }
 
-#registrar-peso {
+button {
+  color: aliceblue;
   margin: 2rem;
+  padding: 1rem;
+  background-color: deeppink;
+  border: 0;
+  border-radius: 6em;
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+button:hover {
+  /* transform: scale(1.1); */
+  transform: translate(0, -5px);
+  box-shadow: 0px 10px 50px deeppink;
+}
+
+#graficos {
+  background-color: aliceblue;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+#lineas {
+  width: 100%;
+  max-width: 600px;
 }
 
 .footer {
