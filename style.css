@@ -10,7 +10,6 @@
   margin: 0;
   text-decoration: none;
   font-family: 'Rajdhani', sans-serif;
-  overflow: hidden;
 }
 
 .body {
@@ -99,6 +98,7 @@ button:hover {
 #lineas {
   width: 100%;
   max-width: 600px;
+  margin: auto;
 }
 
 .footer {
