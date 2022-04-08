@@ -168,9 +168,9 @@ new Chart("lineas", {
     datasets: [
       {
         fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(0,0,0,1.0)",
-        borderColor: "rgba(255,215,0,1.0)",
+        lineTension: 0.4,
+        backgroundColor: "rgba(0,190,197,1.0)",
+        borderColor: "rgba(255,11,172,1.0)",
         // borderWidth: 3,
         data: yValues,
       },
@@ -179,8 +179,11 @@ new Chart("lineas", {
   options: {
     legend: { display: false },
     scales: {
-      yAxes: [{ ticks: { min: 50, max: 70, fontColor: "black", stepSize: 5 } }],
-      xAxes: [{ ticks: { fontColor: "black" } }],
+      yAxes: [{ ticks: { min: 50, max: 70, fontColor: "aliceblue", fontFamily: "Rajdhani",stepSize: 5 } }],
+      xAxes: [{ ticks: { 
+        fontColor: "aliceblue",
+        fontFamily: "Rajdhani",
+       } }],
     },
   },
 });
