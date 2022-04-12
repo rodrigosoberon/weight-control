@@ -18,12 +18,37 @@ class Medicion {
     }
   }
 
-  generarDatoPrueba(mDiasDeDiferencia) {
-    var pPesoRandom = Math.round(Math.random() * 20 + 80);
-    var pDia = new Date();
-    pDia.setDate(pDia.getDate() - mDiasDeDiferencia);
-    var pMedicion = new Medicion(pDia, pPesoRandom);
-    return pMedicion;
+  generarDatosDePrueba(mDiasDeHistorial) {
+    for (let dia = 0; dia < mDiasDeHistorial; dia++) {
+      var pPesoRandom = Math.round(Math.random() * 20 + 80);
+      var pDia = new Date();
+      pDia.setDate(pDia.getDate() - mDiasDeHistorial);
+      var pMedicion = new Medicion(pDia, pPesoRandom);
+      mediciones.push(pMedicion);
+    }
+    mediciones.sort((a, b) => {
+      if (a.fecha > b.fecha) {
+        return 1;
+      }
+      if (a.fecha < b.fecha) {
+        return -1;
+      }
+      return 0;
+    });
+  }
+
+  registrarPeso(){
+    var nuevaMedicion = new Medicion(new Date(), parseInt(prompt("Ingrese su peso:")));
+    mediciones.push(nuevaMedicion);
+    this.actualizarPantalla();
+  }
+
+  actualizarPantalla() {
+    var ultimoPeso = mediciones[mediciones.length - 1].peso;
+    infoPantalla[0].innerText = ultimoPeso + "Kg";
+    infoPantalla[1].innerText = usuario.altura + "cm";
+    infoPantalla[2].innerText = usuario.calcularIndiceMasaCorporal(ultimoPeso);
+    infoPantalla[3].innerText = usuario.determinarCategoria(usuario.calcularIndiceMasaCorporal(ultimoPeso));
   }
 }
 
@@ -45,24 +70,43 @@ class Persona {
       case imc < 18.5:
         return "PESO BAJO";
       case imc >= 18.5 && imc < 25:
-        return "NORMAL";
+        return "ADECUADO";
       case imc >= 25 && imc < 30:
         return "SOBREPESO";
       case imc >= 30:
         return "OBESIDAD";
     }
   }
+
+  cambiarNombre(){
+    this.nombre = prompt("Ingrese su nombre:");
+    var nombreUsuario = document.getElementById("nombreUsuario");
+    nombreUsuario.innerText = this.nombre;
+  }
 }
 
 // * -------------------------------- Globales --------------------------------------
+let infoPantalla = document.getElementsByClassName("infoPantalla");
 const unDia = 86400000;
-let opcionMenu = NaN;
+// let opcionMenu = NaN;
 let mediciones = []; //? Almacena historial de registros
 const usuario = new Persona("Nombre no definido", 0); //? Almacena datos de usuario
 const medicionGenerica = new Medicion(); //? Para utilizar métodos de la clase
 
 // * ------------------------------- Ejecución --------------------------------------
-console.log("Inicio de programa");
+// ? Datos de prueba
+// usuario.altura = 180;
+// medicionGenerica.generarDatosDePrueba(7);
+
+usuario.cambiarNombre();
+usuario.altura = parseInt(prompt("Ingrese su altura en centimetros:"));
+medicionGenerica.registrarPeso();
+
+let botonRegistrar = document.getElementById("registrar-peso");
+botonRegistrar.onclick = () => medicionGenerica.registrarPeso();
+
+
+/* console.log("Inicio de programa");
 while (opcionMenu != 0) {
   opcionMenu = parseInt(
     prompt(
@@ -139,9 +183,12 @@ while (opcionMenu != 0) {
       console.log(`"${opcionMenu}" no es una opción válida!`);
       break;
   }
-}
+} */
 
 // * ---------------------------- Cosas visuales -----------------------------------
+let botonMenu = document.getElementById("botonMenu");
+botonMenu.onclick = () => mostrarMenu();
+
 function mostrarMenu() {
   var x = document.getElementById("links");
   if (x.style.display === "inline-block") {
@@ -179,11 +226,25 @@ new Chart("lineas", {
   options: {
     legend: { display: false },
     scales: {
-      yAxes: [{ ticks: { min: 50, max: 70, fontColor: "aliceblue", fontFamily: "Rajdhani",stepSize: 5 } }],
-      xAxes: [{ ticks: { 
-        fontColor: "aliceblue",
-        fontFamily: "Rajdhani",
-       } }],
+      yAxes: [
+        {
+          ticks: {
+            min: 50,
+            max: 70,
+            fontColor: "aliceblue",
+            fontFamily: "Rajdhani",
+            stepSize: 5,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          ticks: {
+            fontColor: "aliceblue",
+            fontFamily: "Rajdhani",
+          },
+        },
+      ],
     },
   },
 });
