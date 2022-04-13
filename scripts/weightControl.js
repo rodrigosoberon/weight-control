@@ -85,6 +85,20 @@ class Persona {
   }
 }
 
+class Modal{
+  constructor(mTitulo, mContenido){
+    this.titulo = mTitulo;
+    this.contenido = mContenido;
+  }
+
+  mostrarModal(){
+    contenedorModal.style.display = "block";
+    contenedorModal.innerHTML = `<div class="contenidoModal"><span id="cerrarModal">&times;</span><h3>${this.titulo}</h3>${this.contenido}</div>`;
+    let cerrarModal = document.getElementById("cerrarModal");
+    cerrarModal.onclick = () => {contenedorModal.style.display = "none";contenedorModal.innerHTML = "";}
+  }
+}
+
 // * -------------------------------- Globales --------------------------------------
 let infoPantalla = document.getElementsByClassName("infoPantalla");
 const unDia = 86400000;
@@ -94,9 +108,6 @@ const usuario = new Persona("Nombre no definido", 0); //? Almacena datos de usua
 const medicionGenerica = new Medicion(); //? Para utilizar métodos de la clase
 
 // * ------------------------------- Ejecución --------------------------------------
-// ? Datos de prueba
-// usuario.altura = 180;
-// medicionGenerica.generarDatosDePrueba(7);
 
 usuario.cambiarNombre();
 usuario.altura = parseInt(prompt("Ingrese su altura en centimetros:"));
@@ -105,85 +116,12 @@ medicionGenerica.registrarPeso();
 let botonRegistrar = document.getElementById("registrar-peso");
 botonRegistrar.onclick = () => medicionGenerica.registrarPeso();
 
+let contenedorModal = document.getElementById("contenedorModal");
 
-/* console.log("Inicio de programa");
-while (opcionMenu != 0) {
-  opcionMenu = parseInt(
-    prompt(
-      "Elija una opción:\n1 - Ingresar nombre\n2 - Ingresar altura\n3 - Registrar peso\n4 - Listar mediciones\n5 - Generar datos random\n6 - Historial IMC\n0 - Terminar"
-    )
-  );
-  switch (opcionMenu) {
-    case 0:
-      console.log("Programa terminado");
-      break;
+let miModal = new Modal("Titulo del modal", "<p>Contenido del modal</p>",);
+miModal.mostrarModal();
 
-    case 1:
-      usuario.nombre = prompt("Ingrese su nombre:");
-      console.log(`Nombre de usuario es ${usuario.nombre}`);
-      break;
 
-    case 2:
-      usuario.altura = parseInt(prompt("Ingrese su altura en cm"));
-      console.log(`Altura ingresada: ${usuario.altura} cm.`);
-      break;
-
-    case 3:
-      var pesoIngresado = parseInt(prompt("Ingrese su peso en Kg:"));
-      var nuevaMedicion = new Medicion(new Date(), pesoIngresado);
-      nuevaMedicion.mostrarMedicion();
-      mediciones.push(nuevaMedicion);
-      break;
-
-    case 4:
-      medicionGenerica.listarMediciones(mediciones);
-      break;
-
-    case 5:
-      //? Genero un histórico por n días con pesos random y ordeno por fecha:
-      var diasDeHistorial = parseInt(prompt("Cuantos días de historial?"));
-      for (let dia = 0; dia < diasDeHistorial; dia++) {
-        mediciones.push(medicionGenerica.generarDatoPrueba(dia));
-      }
-      mediciones.sort((a, b) => {
-        if (a.fecha > b.fecha) {
-          return 1;
-        }
-        if (a.fecha < b.fecha) {
-          return -1;
-        }
-        return 0;
-      });
-      console.log(`Se auto-generó un historial de ${diasDeHistorial} días`);
-      break;
-
-    case 6:
-      if (mediciones.length == 0) {
-        console.log(
-          "Error: no se registran mediciones. Registre su peso primero."
-        );
-      } else {
-        if (usuario.altura == 0) {
-          console.log("Error: su altura no ha sido definida aún.");
-        } else {
-          for (const mMedicion of mediciones) {
-            var mFecha = mMedicion.fecha.toLocaleDateString();
-            var mIMC = usuario.calcularIndiceMasaCorporal(mMedicion.peso);
-            var mCategoria = usuario.determinarCategoria(mIMC);
-            console.log(
-              `${mFecha} - ${mMedicion.peso}Kg - IMC ${mIMC} -> ${mCategoria}`
-            );
-          }
-        }
-      }
-
-      break;
-
-    default:
-      console.log(`"${opcionMenu}" no es una opción válida!`);
-      break;
-  }
-} */
 
 // * ---------------------------- Cosas visuales -----------------------------------
 let botonMenu = document.getElementById("botonMenu");
