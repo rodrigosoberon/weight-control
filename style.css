@@ -30,36 +30,49 @@
   width: 100%;
 }
 
+#titulo {
+  width: 100%;
+  color: var(--color4);
+  background-color: var(--color5);
+}
+
+#botonMenu{
+  background-color: var(--color3);
+  cursor: pointer;
+}
+
+.link a{
+  color: var(--color4);
+}
+
 .nav #links {
   display: none;
   width: 100%;
 }
 
-.nav a {
-  color: var(--color4);
+nav .link {
   font-size: 17px;
   display: flex;
   flex-direction: row;
   padding: 0.5rem 0.5rem;
 }
 
+.nav a{
+  border-bottom: solid 2px rgba(0, 0, 0, 0);
+  transition: 0.5s;
+}
+
 .nav a:hover {
-  background-color: var(--color2);
-  /* color: black; */
-  transition: 0.3s;
+  border-bottom: solid var(--color2) 2px;
+  transition: 0.5s;
 }
 
 .icono {
   height: 20px;
   width: 20px;
-  padding: 0 0.5rem;
+  margin: 0 0.5rem;
 }
 
-.titulo {
-  background-color: var(--color5);
-  color: var(--color4);
-  width: 100%;
-}
 
 .main {
   flex-grow: 1;
@@ -73,19 +86,37 @@
 
 button {
   color: aliceblue;
-  margin: 2rem;
+  margin: 2rem 0;
+  margin-left: auto;
+  margin-right: auto;
   padding: 1rem;
+  width: 100%;
   background-color: var(--color1);
   border: 0;
   border-radius: 6em;
   transition: 0.4s;
   cursor: pointer;
+  font-size: larger;
 }
 
 button:hover {
   /* transform: scale(1.1); */
   transform: translate(0, -5px);
   box-shadow: 0px 10px 50px var(--color1);
+}
+
+table{
+  margin-left: auto;
+  margin-right: auto;
+  /* width: 50vw; */
+}
+
+td{
+  padding: 0 1rem;
+}
+
+.infoPantalla{
+  font-size: 2rem;
 }
 
 #graficos {
@@ -105,9 +136,15 @@ button:hover {
   color: var(--color4);
   background-color: var(--color5);
   padding: 0.5rem 0.5rem;
+  padding-top: 1rem;
   grid-area: footer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.footer div a img:hover{
+  box-shadow: 0px 0px 25px var(--color4);
+  transition: 0.5s;
 }
