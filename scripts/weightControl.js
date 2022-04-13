@@ -77,12 +77,14 @@ class Persona {
   }
 
   cambiarNombre(mNombre) {
-    this.altura = mNombre;
-    nombreUsuario.innerText = this.altura;
+    this.nombre = mNombre;
+    nombreUsuario.innerText = this.nombre;
+    mostrarMenu();
   }
   cambiarAltura(mAltura) {
     this.altura = parseInt(mAltura);
     medicionGenerica.actualizarPantalla();
+    mostrarMenu();
   }
 }
 
