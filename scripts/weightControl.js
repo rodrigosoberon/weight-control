@@ -37,8 +37,8 @@ class Medicion {
     });
   }
 
-  registrarPeso(){
-    var nuevaMedicion = new Medicion(new Date(), parseInt(prompt("Ingrese su peso:")));
+  registrarPeso(mPeso) {
+    var nuevaMedicion = new Medicion(new Date(), parseInt(mPeso));
     mediciones.push(nuevaMedicion);
     this.actualizarPantalla();
   }
@@ -54,14 +54,12 @@ class Medicion {
 
 class Persona {
   constructor(mNombre, mAltura) {
-    this.nombre = mNombre;
+    this.altura = mNombre;
     this.altura = mAltura;
   }
   calcularIndiceMasaCorporal(mPeso) {
     let indiceMasaMuscular = (
-      (mPeso / (this.altura * this.altura)) *
-      10000
-    ).toFixed(2);
+      (mPeso / (this.altura * this.altura)) * 10000).toFixed(2);
     return indiceMasaMuscular;
   }
 
@@ -78,50 +76,90 @@ class Persona {
     }
   }
 
-  cambiarNombre(){
-    this.nombre = prompt("Ingrese su nombre:");
-    var nombreUsuario = document.getElementById("nombreUsuario");
-    nombreUsuario.innerText = this.nombre;
+  cambiarNombre(mNombre) {
+    this.altura = mNombre;
+    nombreUsuario.innerText = this.altura;
+  }
+  cambiarAltura(mAltura) {
+    this.altura = parseInt(mAltura);
+    medicionGenerica.actualizarPantalla();
   }
 }
 
-class Modal{
-  constructor(mTitulo, mContenido){
-    this.titulo = mTitulo;
-    this.contenido = mContenido;
-  }
-
-  mostrarModal(){
+class Modal {
+  mostrarModal(pContenido) {
     contenedorModal.style.display = "block";
-    contenedorModal.innerHTML = `<div class="contenidoModal"><span id="cerrarModal">&times;</span><h3>${this.titulo}</h3>${this.contenido}</div>`;
+    contenedorModal.innerHTML = pContenido;
     let cerrarModal = document.getElementById("cerrarModal");
-    cerrarModal.onclick = () => {contenedorModal.style.display = "none";contenedorModal.innerHTML = "";}
+    cerrarModal.onclick = () => {
+      contenedorModal.style.display = "none";
+      contenedorModal.innerHTML = "";
+    };
+  }
+
+  armarModalGenerico(mTitulo, mCampo, mFuncion) {
+    var contenido = `<div class="contenidoModal">
+      <span id="cerrarModal">&times;</span>
+        <h3>${mTitulo}</h3>
+        <input id="${mCampo}" type="text">
+        <button id="guardar">Guardar</button>
+    </div>`;
+    this.mostrarModal(contenido);
+    let guardar = document.getElementById("guardar");
+    guardar.onclick = () => {
+      contenedorModal.style.display = "none";
+      mFuncion(document.getElementById(mCampo).value);
+      contenedorModal.innerHTML = "";
+    };
   }
 }
+
 
 // * -------------------------------- Globales --------------------------------------
 let infoPantalla = document.getElementsByClassName("infoPantalla");
 const unDia = 86400000;
-// let opcionMenu = NaN;
+let miModal = new Modal(); //? Manejo de modales
+let contenedorModal = document.getElementById("contenedorModal");
 let mediciones = []; //? Almacena historial de registros
 const usuario = new Persona("Nombre no definido", 0); //? Almacena datos de usuario
 const medicionGenerica = new Medicion(); //? Para utilizar métodos de la clase
 
-// * ------------------------------- Ejecución --------------------------------------
 
-usuario.cambiarNombre();
-usuario.altura = parseInt(prompt("Ingrese su altura en centimetros:"));
-medicionGenerica.registrarPeso();
+// * ------------------------------- Eventos --------------------------------------
+let nombreUsuario = document.getElementById("nombreUsuario");
+nombreUsuario.addEventListener("click", cambiarNombre);
 
-let botonRegistrar = document.getElementById("registrar-peso");
-botonRegistrar.onclick = () => medicionGenerica.registrarPeso();
+let alturaUsuario = document.getElementById("alturaUsuario");
+alturaUsuario.addEventListener("click", cambiarAltura);
 
-let contenedorModal = document.getElementById("contenedorModal");
-
-let miModal = new Modal("Titulo del modal", "<p>Contenido del modal</p>",);
-miModal.mostrarModal();
+let registrarPeso = document.getElementById("registrarPeso");
+registrarPeso.addEventListener("click", guardarPeso);
 
 
+// * ------------------------------- Funciones --------------------------------------
+function cambiarNombre() {
+  miModal.armarModalGenerico(
+    "Ingrese su nombre",
+    "nombre",
+    usuario.cambiarNombre.bind(usuario)
+  );
+}
+
+function cambiarAltura() {
+  miModal.armarModalGenerico(
+    "Ingrese su altura en cm",
+    "altura",
+    usuario.cambiarAltura.bind(usuario)
+  );
+}
+
+function guardarPeso() {
+  miModal.armarModalGenerico(
+    "Ingrese su peso en Kg",
+    "peso",
+    medicionGenerica.registrarPeso.bind(medicionGenerica)
+  );
+}
 
 // * ---------------------------- Cosas visuales -----------------------------------
 let botonMenu = document.getElementById("botonMenu");
