@@ -30,39 +30,49 @@
   width: 100%;
 }
 
+#titulo {
+  width: 100%;
+  color: var(--color4);
+  background-color: var(--color5);
+}
+
+#botonMenu{
+  background-color: var(--color3);
+  cursor: pointer;
+}
+
+.link a{
+  color: var(--color4);
+}
+
 .nav #links {
   display: none;
   width: 100%;
 }
 
 nav .link {
-  color: var(--color4);
   font-size: 17px;
   display: flex;
   flex-direction: row;
   padding: 0.5rem 0.5rem;
 }
 
+.nav a{
+  border-bottom: solid 2px rgba(0, 0, 0, 0);
+  transition: 0.5s;
+}
+
 .nav a:hover {
-  background-color: var(--color2);
-  transition: 0.3s;
+  border-bottom: solid var(--color2) 2px;
+  transition: 0.5s;
 }
 
 .icono {
   height: 20px;
   width: 20px;
-  padding: 0 0.5rem;
+  margin: 0 0.5rem;
 }
 
-.inline{
-  display: inline;
-}
-
-.titulo {
-  background-color: var(--color5);
-  color: var(--color4);
-  width: 100%;
-}
 
 .main {
   flex-grow: 1;
@@ -86,6 +96,7 @@ button {
   border-radius: 6em;
   transition: 0.4s;
   cursor: pointer;
+  font-size: larger;
 }
 
 button:hover {
@@ -131,4 +142,9 @@ td{
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.footer div a img:hover{
+  box-shadow: 0px 0px 25px var(--color4);
+  transition: 0.5s;
 }
