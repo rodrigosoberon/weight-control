@@ -87,20 +87,19 @@ nav .link {
 button {
   color: aliceblue;
   margin: 2rem 0;
+  display: block;
   margin-left: auto;
   margin-right: auto;
-  padding: 1rem;
-  width: 100%;
+  padding: 0.5rem 1rem;
   background-color: var(--color1);
   border: 0;
-  border-radius: 6em;
+  border-radius: 0.5em;
   transition: 0.4s;
   cursor: pointer;
   font-size: larger;
 }
 
 button:hover {
-  /* transform: scale(1.1); */
   transform: translate(0, -5px);
   box-shadow: 0px 10px 50px var(--color1);
 }
@@ -108,7 +107,6 @@ button:hover {
 table{
   margin-left: auto;
   margin-right: auto;
-  /* width: 50vw; */
 }
 
 td{
@@ -117,6 +115,54 @@ td{
 
 .infoPantalla{
   font-size: 2rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.5); 
+}
+
+.contenidoModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: var(--color4);
+  color: var(--color5);
+  margin: 30% auto;
+  padding: 20px;
+  border-radius: 0.5rem;
+  width: 70%;
+  height: 50vh;
+}
+
+
+#cerrarModal {
+  color: #aaa;
+  align-self: end;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#cerrarModal:hover, #cerrarModal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#guardar{
+  background-color: var(--color3);
+}
+
+#guardar:hover{
+  box-shadow: 0px 10px 30px var(--color3);
 }
 
 #graficos {
