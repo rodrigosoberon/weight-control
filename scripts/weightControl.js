@@ -35,11 +35,13 @@ class Medicion {
       }
       return 0;
     });
+    localStorage.setItem("mediciones", JSON.stringify(mediciones)); // * PERSISTENCIA DE ARRAY DE MEDICIONES
   }
 
   registrarPeso(mPeso) {
     var nuevaMedicion = new Medicion(new Date(), parseInt(mPeso));
     mediciones.push(nuevaMedicion);
+    localStorage.setItem("mediciones", JSON.stringify(mediciones)); // * PERSISTENCIA DE ARRAY DE MEDICIONES
     this.actualizarPantalla();
   }
 
@@ -79,12 +81,12 @@ class Persona {
   cambiarNombre(mNombre) {
     this.nombre = mNombre;
     nombreUsuario.innerText = this.nombre;
-    mostrarMenu();
+    localStorage.setItem('usuario', mNombre);
   }
   cambiarAltura(mAltura) {
     this.altura = parseInt(mAltura);
-    medicionGenerica.actualizarPantalla();
-    mostrarMenu();
+    if (mediciones?.length > 0){medicionGenerica.actualizarPantalla()}
+    localStorage.setItem('altura', mAltura);
   }
 }
 
@@ -137,6 +139,24 @@ alturaUsuario.addEventListener("click", cambiarAltura);
 let registrarPeso = document.getElementById("registrarPeso");
 registrarPeso.addEventListener("click", guardarPeso);
 
+// * ------------------------------- Ejecución --------------------------------------
+nombreUsuario.innerText = localStorage.getItem('usuario');
+
+if (!nombreUsuario.innerText){
+  cambiarNombre();
+}
+
+usuario.altura = parseInt(localStorage.getItem('altura'));
+
+let medicionesAlmacenadas = JSON.parse(localStorage.getItem('mediciones'));
+
+if (medicionesAlmacenadas?.length > 0){
+  mediciones = medicionesAlmacenadas;
+}
+
+if(mediciones?.length > 0){
+  medicionGenerica.actualizarPantalla();
+}
 
 // * ------------------------------- Funciones --------------------------------------
 function cambiarNombre() {
@@ -164,6 +184,7 @@ function guardarPeso() {
 }
 
 // * ---------------------------- Cosas visuales -----------------------------------
+
 let botonMenu = document.getElementById("botonMenu");
 botonMenu.onclick = () => mostrarMenu();
 
