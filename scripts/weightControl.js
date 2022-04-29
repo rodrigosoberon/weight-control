@@ -7,25 +7,25 @@ class Persona {
   }
 
   registrarPeso(mPeso) {
-    //* Agrega una medición de peso con fecha HOY al vector de mediciones
+    //? Agrega una medición de peso con fecha HOY al vector de mediciones
     let medicion = { peso: mPeso, fecha: new Date() };
     usuario.mediciones.push(medicion);
   }
 
   ultimoPeso() {
-    //* Retorna el útlimo pesaje registrado dentro del array de mediciones
+    //? Retorna el útlimo pesaje registrado dentro del array de mediciones
     return this.mediciones[this.mediciones.length - 1].peso;
   }
 
   obtenerIMC() {
-    //* Calcula y devuelve el valor de IMC en base al último peso registrado
+    //? Calcula y devuelve el valor de IMC en base al último peso registrado
     return ((this.ultimoPeso() / (this.altura * this.altura)) * 10000).toFixed(
       2
     );
   }
 
   obtenerClasificacion() {
-    //* Calcula el IMC actual y devuelve un texto con la clasificación del mismo
+    //? Calcula el IMC actual y devuelve un texto con la clasificación del mismo
     let imc = this.obtenerIMC();
     switch (true) {
       case imc < 18.5:
@@ -40,7 +40,7 @@ class Persona {
   }
 
   cambiarNombre() {
-    //* Ejecuta una sweetalert para cambiar el nombre del usuario
+    //? Ejecuta una sweetalert para cambiar el nombre del usuario
     (async () => {
       const { value: nombreIngresado } = await Swal.fire({
         title: "Cambiar mi nombre:",
@@ -61,7 +61,7 @@ class Persona {
   }
 
   cambiarAltura() {
-    //* Ejecuta una sweetalert para cambiar la altura del usuario
+    //? Ejecuta una sweetalert para cambiar la altura del usuario
     (async () => {
       const { value: alturaIngresada } = await Swal.fire({
         title: "Modificar mi altura",
@@ -83,7 +83,7 @@ class Persona {
   }
 
   ingresarPeso() {
-    //* Ejecuta una sweet alert para registrar un peso con fecha y hora actual
+    //? Ejecuta una sweet alert para registrar un peso con fecha y hora actual
     (async () => {
       const { value: pesoIngresado } = await Swal.fire({
         title: "Ingresar peso en Kg",
@@ -105,16 +105,16 @@ class Persona {
   }
 
   crearUsuario() {
-    //* Carga inicial de datos de usuario. Solo debe llamarse si no existen datos en localStorage
+    //? Carga inicial de datos de usuario. Solo debe llamarse si no existen datos en localStorage
     Swal.fire({
       title: "Ingrese sus datos",
       html:
-        '<input id="swal-input1" class="swal2-input">' +
-        "<label>Nombre</lable>" +
-        '<input type="number" id="swal-input2" class="swal2-input">' +
-        "<label>Altura (cm)</lable>" +
-        '<input type="number" id="swal-input3" class="swal2-input">' +
-        "<label>Peso (Kg)</lable>",
+        '<input id="swal-input1" class="swal2-input" placeholder="Su nombre aqui">' +
+        '<br><label>Nombre</lable>' +
+        '<br><input type="number" id="swal-input2" class="swal2-input" placeholder="170">' +
+        '<br><label>Altura (cm)</lable>' +
+        '<br><input type="number" id="swal-input3" class="swal2-input" placeholder="70">' +
+        '<br><label>Peso (Kg)</lable>',
       confirmButtonText: "Registrar",
       focusConfirm: false,
       allowOutsideClick: false,
@@ -135,15 +135,44 @@ class Persona {
           this.registrarPeso(pesoIngresado),
           localStorage.setItem("usuario", JSON.stringify(usuario)),
           actualizarPantalla(),
+          location.reload() //? recargo pagina para que agregue los eventos del menú
         ];
       },
     });
   }
+
+  cerrarSesion() {
+    //? Ejecuta una sweetalert para confirmar cierre de sesion
+    Swal.fire({
+      title: "¿Está seguro?",
+      text: "Se eliminaran todos sus datos...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Si, cerrar sesión!",
+      cancelButtonText: "No, cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //? Si se confirma, elimina datos locales y recarga la página luego de 2 segundos
+        localStorage.clear();
+        Swal.fire({
+          title: 'Sesión cerrada!',
+          timer: 2000,
+          didOpen: () => {
+          },
+          willClose: () => {
+            location.reload();
+          }
+        })
+      }
+    });
+  }
 }
 
-// * ------------------------------- Funciones --------------------------------------
+// * ---------------------------- Cosas visuales -----------------------------------
 function actualizarPantalla() {
-  //* Renderiza datos en pantalla
+  //? Renderiza datos en pantalla
   nombreUsuario.innerText = usuario?.nombre;
   alturaUsuario.innerHTML = `${usuario?.altura} cm`;
   infoPantalla[0].innerText = `${usuario?.ultimoPeso()} kg`;
@@ -152,17 +181,17 @@ function actualizarPantalla() {
   infoPantalla[3].innerText = usuario.obtenerClasificacion();
 }
 
-// * ---------------------------- Cosas visuales -----------------------------------
 let nombreUsuario = document.getElementById("nombreUsuario");
 let alturaUsuario = document.getElementById("alturaUsuario");
 let infoPantalla = document.getElementsByClassName("infoPantalla");
 let registrarPeso = document.getElementById("registrarPeso");
+let cerrarSesion = document.getElementById("cerrarSesion");
 
 let botonMenu = document.getElementById("botonMenu");
 botonMenu.onclick = () => mostrarMenu();
 
 function mostrarMenu() {
-  //* despliega u oculta el menú
+  //? despliega u oculta el menú
   var x = document.getElementById("links");
   if (x.style.display === "inline-block") {
     x.style.display = "none";
@@ -170,6 +199,8 @@ function mostrarMenu() {
     x.style.display = "inline-block";
   }
 }
+
+
 
 var yValues = [65, 62, 63, 60, 59, 55, 53];
 
@@ -234,3 +265,4 @@ actualizarPantalla();
 nombreUsuario.addEventListener("click", usuario.cambiarNombre);
 alturaUsuario.addEventListener("click", usuario.cambiarAltura);
 registrarPeso.addEventListener("click", usuario.ingresarPeso);
+cerrarSesion.addEventListener("click", usuario.cerrarSesion);
