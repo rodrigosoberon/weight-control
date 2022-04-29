@@ -110,11 +110,11 @@ class Persona {
       title: "Ingrese sus datos",
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="Su nombre aqui">' +
-        '<br><label>Nombre</lable>' +
+        "<br><label>Nombre</lable>" +
         '<br><input type="number" id="swal-input2" class="swal2-input" placeholder="170">' +
-        '<br><label>Altura (cm)</lable>' +
+        "<br><label>Altura (cm)</lable>" +
         '<br><input type="number" id="swal-input3" class="swal2-input" placeholder="70">' +
-        '<br><label>Peso (Kg)</lable>',
+        "<br><label>Peso (Kg)</lable>",
       confirmButtonText: "Registrar",
       focusConfirm: false,
       allowOutsideClick: false,
@@ -135,7 +135,7 @@ class Persona {
           this.registrarPeso(pesoIngresado),
           localStorage.setItem("usuario", JSON.stringify(usuario)),
           actualizarPantalla(),
-          location.reload() //? recargo pagina para que agregue los eventos del menú
+          location.reload(), //? recargo pagina para que agregue los eventos del menú
         ];
       },
     });
@@ -151,26 +151,27 @@ class Persona {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "¡Si, cerrar sesión!",
-      cancelButtonText: "No, cancelar"
+      cancelButtonText: "No, cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         //? Si se confirma, elimina datos locales y recarga la página luego de 2 segundos
         localStorage.clear();
         Swal.fire({
-          title: 'Sesión cerrada!',
+          title: "Sesión cerrada!",
           timer: 2000,
-          didOpen: () => {
-          },
+          didOpen: () => {},
           willClose: () => {
             location.reload();
-          }
-        })
+          },
+        });
       }
     });
   }
 }
 
 // * ---------------------------- Cosas visuales -----------------------------------
+const nombreDias = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
+
 function actualizarPantalla() {
   //? Renderiza datos en pantalla
   nombreUsuario.innerText = usuario?.nombre;
@@ -179,6 +180,25 @@ function actualizarPantalla() {
   infoPantalla[1].innerText = `${usuario?.altura} cm`;
   infoPantalla[2].innerText = usuario.obtenerIMC();
   infoPantalla[3].innerText = usuario.obtenerClasificacion();
+
+  //? manejo de grafico de chart.js:
+  var { mediciones: arrayMediciones } = usuario;
+  arrayPesos.length = 0;
+  var arrayFechas = [];
+  for (let i = 0; i < arrayMediciones.length; i++) {
+    arrayPesos.push(arrayMediciones[i].peso);
+    fechaConvertida = new Date(arrayMediciones[i].fecha);
+    arrayFechas.push([
+      nombreDias[fechaConvertida.getDay()-1] +
+        " " +
+        fechaConvertida.getDate() +
+        "-" +
+        fechaConvertida.getMonth(),
+    ]);
+  }
+  grafico.data.labels = arrayFechas;
+  grafico.update();
+
 }
 
 let nombreUsuario = document.getElementById("nombreUsuario");
@@ -200,23 +220,13 @@ function mostrarMenu() {
   }
 }
 
+var arrayPesos = [];
 
-
-var yValues = [65, 62, 63, 60, 59, 55, 53];
-
-new Chart("lineas", {
-  //* grafico de libreria chart.js
+const grafico = new Chart("lineas", {
+  //? grafico de libreria chart.js
   type: "line",
   data: {
-    labels: [
-      "Lunes",
-      "Martes",
-      "Miercoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-      "Domingo",
-    ],
+    labels: [],
     datasets: [
       {
         fill: false,
@@ -224,7 +234,7 @@ new Chart("lineas", {
         backgroundColor: "rgba(0,190,197,1.0)",
         borderColor: "rgba(255,11,172,1.0)",
         // borderWidth: 3,
-        data: yValues,
+        data: arrayPesos,
       },
     ],
   },
@@ -234,11 +244,11 @@ new Chart("lineas", {
       yAxes: [
         {
           ticks: {
-            min: 50,
-            max: 70,
+            // min: 50,
+            // max: 70,
             fontColor: "aliceblue",
             fontFamily: "Rajdhani",
-            stepSize: 5,
+            // stepSize: 5,
           },
         },
       ],
