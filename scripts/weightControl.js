@@ -1,71 +1,32 @@
 // * -------------------------------- Clases ---------------------------------------
-class Medicion {
-  constructor(mFecha, mPeso) {
-    this.fecha = mFecha;
-    this.peso = mPeso;
-  }
-
-  mostrarMedicion() {
-    console.log(
-      `Peso registrado el ${this.fecha.toLocaleDateString()}: ${this.peso}Kg.`
-    );
-  }
-
-  listarMediciones(mArrayMediciones) {
-    console.log("Listando todas las mediciones.");
-    for (const mMedicion of mArrayMediciones) {
-      mMedicion.mostrarMedicion();
-    }
-  }
-
-  generarDatosDePrueba(mDiasDeHistorial) {
-    for (let dia = 0; dia < mDiasDeHistorial; dia++) {
-      var pPesoRandom = Math.round(Math.random() * 20 + 80);
-      var pDia = new Date();
-      pDia.setDate(pDia.getDate() - mDiasDeHistorial);
-      var pMedicion = new Medicion(pDia, pPesoRandom);
-      mediciones.push(pMedicion);
-    }
-    mediciones.sort((a, b) => {
-      if (a.fecha > b.fecha) {
-        return 1;
-      }
-      if (a.fecha < b.fecha) {
-        return -1;
-      }
-      return 0;
-    });
-    localStorage.setItem("mediciones", JSON.stringify(mediciones)); // * PERSISTENCIA DE ARRAY DE MEDICIONES
+class Persona {
+  constructor(mNombre, mAltura) {
+    this.nombre = mNombre;
+    this.altura = mAltura;
+    this.mediciones = [];
   }
 
   registrarPeso(mPeso) {
-    var nuevaMedicion = new Medicion(new Date(), parseInt(mPeso));
-    mediciones.push(nuevaMedicion);
-    localStorage.setItem("mediciones", JSON.stringify(mediciones)); // * PERSISTENCIA DE ARRAY DE MEDICIONES
-    this.actualizarPantalla();
+    //? Agrega una medición de peso con fecha HOY al vector de mediciones
+    let medicion = { peso: mPeso, fecha: new Date() };
+    usuario.mediciones.push(medicion);
   }
 
-  actualizarPantalla() {
-    var ultimoPeso = mediciones[mediciones.length - 1].peso;
-    infoPantalla[0].innerText = ultimoPeso + "Kg";
-    infoPantalla[1].innerText = usuario.altura + "cm";
-    infoPantalla[2].innerText = usuario.calcularIndiceMasaCorporal(ultimoPeso);
-    infoPantalla[3].innerText = usuario.determinarCategoria(usuario.calcularIndiceMasaCorporal(ultimoPeso));
-  }
-}
-
-class Persona {
-  constructor(mNombre, mAltura) {
-    this.altura = mNombre;
-    this.altura = mAltura;
-  }
-  calcularIndiceMasaCorporal(mPeso) {
-    let indiceMasaMuscular = (
-      (mPeso / (this.altura * this.altura)) * 10000).toFixed(2);
-    return indiceMasaMuscular;
+  ultimoPeso() {
+    //? Retorna el útlimo pesaje registrado dentro del array de mediciones
+    return this.mediciones[this.mediciones.length - 1]?.peso;
   }
 
-  determinarCategoria(imc) {
+  obtenerIMC() {
+    //? Calcula y devuelve el valor de IMC en base al último peso registrado
+    return ((this.ultimoPeso() / (this.altura * this.altura)) * 10000).toFixed(
+      2
+    );
+  }
+
+  obtenerClasificacion() {
+    //? Calcula el IMC actual y devuelve un texto con la clasificación del mismo
+    let imc = this.obtenerIMC();
     switch (true) {
       case imc < 18.5:
         return "PESO BAJO";
@@ -78,117 +39,179 @@ class Persona {
     }
   }
 
-  cambiarNombre(mNombre) {
-    this.nombre = mNombre;
-    nombreUsuario.innerText = this.nombre;
-    localStorage.setItem('usuario', mNombre);
-  }
-  cambiarAltura(mAltura) {
-    this.altura = parseInt(mAltura);
-    if (mediciones?.length > 0){medicionGenerica.actualizarPantalla()}
-    localStorage.setItem('altura', mAltura);
-  }
-}
+  cambiarNombre() {
+    //? Ejecuta una sweetalert para cambiar el nombre del usuario
+    (async () => {
+      const { value: nombreIngresado } = await Swal.fire({
+        title: "Cambiar mi nombre:",
+        input: "text",
+        inputValidator: (nombreIngresado) => {
+          if (!nombreIngresado) {
+            return "El nombre no puede estar en blanco!";
+          }
+        },
+      });
 
-class Modal {
-  mostrarModal(pContenido) {
-    contenedorModal.style.display = "block";
-    contenedorModal.innerHTML = pContenido;
-    let cerrarModal = document.getElementById("cerrarModal");
-    cerrarModal.onclick = () => {
-      contenedorModal.style.display = "none";
-      contenedorModal.innerHTML = "";
-    };
+      if (nombreIngresado) {
+        usuario.nombre = nombreIngresado;
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+        actualizarPantalla();
+      }
+    })();
   }
 
-  armarModalGenerico(mTitulo, mCampo, mFuncion) {
-    var contenido = `<div class="contenidoModal">
-      <span id="cerrarModal">&times;</span>
-        <h3>${mTitulo}</h3>
-        <input id="${mCampo}" type="text">
-        <button id="guardar">Guardar</button>
-    </div>`;
-    this.mostrarModal(contenido);
-    let guardar = document.getElementById("guardar");
-    guardar.onclick = () => {
-      contenedorModal.style.display = "none";
-      mFuncion(document.getElementById(mCampo).value);
-      contenedorModal.innerHTML = "";
-    };
+  cambiarAltura() {
+    //? Ejecuta una sweetalert para cambiar la altura del usuario
+    (async () => {
+      const { value: alturaIngresada } = await Swal.fire({
+        title: "Modificar mi altura",
+        input: "range",
+        inputAttributes: {
+          min: 120,
+          max: 220,
+          step: 1,
+        },
+        inputValue: usuario.altura,
+      });
+
+      if (alturaIngresada) {
+        usuario.altura = alturaIngresada;
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+        actualizarPantalla();
+      }
+    })();
   }
-}
 
+  ingresarPeso() {
+    //? Ejecuta una sweet alert para registrar un peso con fecha y hora actual
+    (async () => {
+      const { value: pesoIngresado } = await Swal.fire({
+        title: "Ingresar peso en Kg",
+        input: "range",
+        inputAttributes: {
+          min: 40,
+          max: 240,
+          step: 1,
+        },
+        inputValue: usuario.ultimoPeso(),
+      });
 
-// * -------------------------------- Globales --------------------------------------
-let infoPantalla = document.getElementsByClassName("infoPantalla");
-const unDia = 86400000;
-let miModal = new Modal(); //? Manejo de modales
-let contenedorModal = document.getElementById("contenedorModal");
-let mediciones = []; //? Almacena historial de registros
-const usuario = new Persona("Nombre no definido", 0); //? Almacena datos de usuario
-const medicionGenerica = new Medicion(); //? Para utilizar métodos de la clase
+      if (pesoIngresado) {
+        usuario.registrarPeso(parseInt(pesoIngresado));
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+        actualizarPantalla();
+      }
+    })();
+  }
 
+  crearUsuario() {
+    //? Carga inicial de datos de usuario. Solo debe llamarse si no existen datos en localStorage
+    Swal.fire({
+      title: "Ingrese sus datos",
+      html:
+        '<input id="swal-input1" class="swal2-input" placeholder="Su nombre aqui">' +
+        "<br><label>Nombre</lable>" +
+        '<br><input type="number" id="swal-input2" class="swal2-input" placeholder="170">' +
+        "<br><label>Altura (cm)</lable>" +
+        '<br><input type="number" id="swal-input3" class="swal2-input" placeholder="70">' +
+        "<br><label>Peso (Kg)</lable>",
+      confirmButtonText: "Registrar",
+      focusConfirm: false,
+      allowOutsideClick: false,
+      preConfirm: () => {
+        const nombreIngresado = document.getElementById("swal-input1").value;
+        const alturaIngresada = parseInt(
+          document.getElementById("swal-input2").value
+        );
+        const pesoIngresado = parseInt(
+          document.getElementById("swal-input3").value
+        );
+        if (!nombreIngresado || !pesoIngresado || !alturaIngresada) {
+          Swal.showValidationMessage(`Quedan campos vacios!`);
+        }
+        return [
+          (this.nombre = nombreIngresado),
+          (this.altura = alturaIngresada),
+          this.registrarPeso(pesoIngresado),
+          localStorage.setItem("usuario", JSON.stringify(usuario)),
+          actualizarPantalla(),
+          location.reload(), //? recargo pagina para que agregue los eventos del menú
+        ];
+      },
+    });
+  }
 
-// * ------------------------------- Eventos --------------------------------------
-let nombreUsuario = document.getElementById("nombreUsuario");
-nombreUsuario.addEventListener("click", cambiarNombre);
-
-let alturaUsuario = document.getElementById("alturaUsuario");
-alturaUsuario.addEventListener("click", cambiarAltura);
-
-let registrarPeso = document.getElementById("registrarPeso");
-registrarPeso.addEventListener("click", guardarPeso);
-
-// * ------------------------------- Ejecución --------------------------------------
-nombreUsuario.innerText = localStorage.getItem('usuario');
-
-if (!nombreUsuario.innerText){
-  cambiarNombre();
-}
-
-usuario.altura = parseInt(localStorage.getItem('altura'));
-
-let medicionesAlmacenadas = JSON.parse(localStorage.getItem('mediciones'));
-
-if (medicionesAlmacenadas?.length > 0){
-  mediciones = medicionesAlmacenadas;
-}
-
-if(mediciones?.length > 0){
-  medicionGenerica.actualizarPantalla();
-}
-
-// * ------------------------------- Funciones --------------------------------------
-function cambiarNombre() {
-  miModal.armarModalGenerico(
-    "Ingrese su nombre",
-    "nombre",
-    usuario.cambiarNombre.bind(usuario)
-  );
-}
-
-function cambiarAltura() {
-  miModal.armarModalGenerico(
-    "Ingrese su altura en cm",
-    "altura",
-    usuario.cambiarAltura.bind(usuario)
-  );
-}
-
-function guardarPeso() {
-  miModal.armarModalGenerico(
-    "Ingrese su peso en Kg",
-    "peso",
-    medicionGenerica.registrarPeso.bind(medicionGenerica)
-  );
+  cerrarSesion() {
+    //? Ejecuta una sweetalert para confirmar cierre de sesion
+    Swal.fire({
+      title: "¿Está seguro?",
+      text: "Se eliminaran todos sus datos...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Si, cerrar sesión!",
+      cancelButtonText: "No, cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //? Si se confirma, elimina datos locales y recarga la página luego de 2 segundos
+        localStorage.clear();
+        Swal.fire({
+          title: "Sesión cerrada!",
+          timer: 2000,
+          willClose: () => {
+            location.reload();
+          },
+        });
+      }
+    });
+  }
 }
 
 // * ---------------------------- Cosas visuales -----------------------------------
+const nombreDias = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
+const cantidadMuestras = 7; //? Determina las últimas X mediciones a mostrar en el gráfico (podria parametrizarse)
+
+function actualizarPantalla() {
+  //? Renderiza datos en pantalla. Se llama cada vez que cambia algún dato.
+  nombreUsuario.innerText = usuario?.nombre;
+  alturaUsuario.innerHTML = `${usuario?.altura} cm`;
+  infoPantalla[0].innerText = `${usuario?.ultimoPeso()} kg`;
+  infoPantalla[1].innerText = `${usuario?.altura} cm`;
+  infoPantalla[2].innerText = usuario.obtenerIMC();
+  infoPantalla[3].innerText = usuario.obtenerClasificacion();
+
+  //? manejo de grafico de chart.js:
+  var { mediciones: arrayMediciones } = usuario;
+  arrayPesos.length = 0;
+  var arrayFechas = [];
+  arrayMediciones = arrayMediciones.slice(-cantidadMuestras); //? limito la cantidad de mediciones en el grafico
+  for (let i = 0; i < arrayMediciones.length; i++) {
+    arrayPesos.push(arrayMediciones[i].peso);
+    fechaConvertida = new Date(arrayMediciones[i].fecha);
+    arrayFechas.push([
+      nombreDias[fechaConvertida.getDay()-1] +
+        " " +
+        fechaConvertida.getDate() +
+        "-" +
+        (fechaConvertida.getMonth()+1),
+    ]); //? guardo las fechas a mostrar con formato "Dia dd-mm"
+  }
+  grafico.data.labels = arrayFechas;
+  grafico.update();
+}
+
+let nombreUsuario = document.getElementById("nombreUsuario");
+let alturaUsuario = document.getElementById("alturaUsuario");
+let infoPantalla = document.getElementsByClassName("infoPantalla");
+let registrarPeso = document.getElementById("registrarPeso");
+let cerrarSesion = document.getElementById("cerrarSesion");
 
 let botonMenu = document.getElementById("botonMenu");
 botonMenu.onclick = () => mostrarMenu();
 
 function mostrarMenu() {
+  //? despliega u oculta el menú
   var x = document.getElementById("links");
   if (x.style.display === "inline-block") {
     x.style.display = "none";
@@ -197,20 +220,13 @@ function mostrarMenu() {
   }
 }
 
-var yValues = [65, 62, 63, 60, 59, 55, 53];
+var arrayPesos = [];
 
-new Chart("lineas", {
+const grafico = new Chart("lineas", {
+  //? grafico de libreria chart.js
   type: "line",
   data: {
-    labels: [
-      "Lunes",
-      "Martes",
-      "Miercoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-      "Domingo",
-    ],
+    labels: [],
     datasets: [
       {
         fill: false,
@@ -218,7 +234,7 @@ new Chart("lineas", {
         backgroundColor: "rgba(0,190,197,1.0)",
         borderColor: "rgba(255,11,172,1.0)",
         // borderWidth: 3,
-        data: yValues,
+        data: arrayPesos,
       },
     ],
   },
@@ -228,11 +244,11 @@ new Chart("lineas", {
       yAxes: [
         {
           ticks: {
-            min: 50,
-            max: 70,
+            // min: 50,
+            // max: 70,
             fontColor: "aliceblue",
             fontFamily: "Rajdhani",
-            stepSize: 5,
+            // stepSize: 5,
           },
         },
       ],
@@ -247,3 +263,16 @@ new Chart("lineas", {
     },
   },
 });
+
+// * ------------------------------- Ejecución --------------------------------------
+usuario = new Persona();
+localStorage.getItem("usuario")
+  ? Object.assign(usuario, JSON.parse(localStorage.getItem("usuario")))
+  : usuario.crearUsuario();
+
+actualizarPantalla();
+
+nombreUsuario.addEventListener("click", usuario.cambiarNombre);
+alturaUsuario.addEventListener("click", usuario.cambiarAltura);
+registrarPeso.addEventListener("click", usuario.ingresarPeso);
+cerrarSesion.addEventListener("click", usuario.cerrarSesion);
