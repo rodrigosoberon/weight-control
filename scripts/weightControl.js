@@ -44,6 +44,7 @@ class Persona {
     (async () => {
       const { value: nombreIngresado } = await Swal.fire({
         title: "Cambiar mi nombre:",
+        confirmButtonColor: "#54086b",
         input: "text",
         inputValidator: (nombreIngresado) => {
           if (!nombreIngresado) {
@@ -66,6 +67,7 @@ class Persona {
       const { value: alturaIngresada } = await Swal.fire({
         title: "Modificar mi altura",
         input: "range",
+        confirmButtonColor: "#54086b",
         inputAttributes: {
           min: 120,
           max: 220,
@@ -88,6 +90,7 @@ class Persona {
       const { value: pesoIngresado } = await Swal.fire({
         title: "Ingresar peso en Kg",
         input: "range",
+        confirmButtonColor: "#54086b",
         inputAttributes: {
           min: 40,
           max: 240,
@@ -116,6 +119,7 @@ class Persona {
         '<br><input type="number" id="swal-input3" class="swal2-input" placeholder="70">' +
         "<br><label>Peso (Kg)</lable>",
       confirmButtonText: "Registrar",
+      confirmButtonColor: "#54086b",
       focusConfirm: false,
       allowOutsideClick: false,
       preConfirm: () => {
@@ -128,15 +132,16 @@ class Persona {
         );
         if (!nombreIngresado || !pesoIngresado || !alturaIngresada) {
           Swal.showValidationMessage(`Quedan campos vacios!`);
+        } else {
+          return [
+            (this.nombre = nombreIngresado),
+            (this.altura = alturaIngresada),
+            this.registrarPeso(pesoIngresado),
+            localStorage.setItem("usuario", JSON.stringify(usuario)),
+            actualizarPantalla(),
+            location.reload(), //? recargo pagina para que agregue los eventos del menú
+          ];
         }
-        return [
-          (this.nombre = nombreIngresado),
-          (this.altura = alturaIngresada),
-          this.registrarPeso(pesoIngresado),
-          localStorage.setItem("usuario", JSON.stringify(usuario)),
-          actualizarPantalla(),
-          location.reload(), //? recargo pagina para que agregue los eventos del menú
-        ];
       },
     });
   }
@@ -148,8 +153,8 @@ class Persona {
       text: "Se eliminaran todos sus datos...",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#54086b",
+      cancelButtonColor: "#bbb", //"#d33",
       confirmButtonText: "¡Si, cerrar sesión!",
       cancelButtonText: "No, cancelar",
     }).then((result) => {
@@ -158,6 +163,7 @@ class Persona {
         localStorage.clear();
         Swal.fire({
           title: "Sesión cerrada!",
+          confirmButtonColor: "#54086b",
           timer: 2000,
           willClose: () => {
             location.reload();
@@ -190,11 +196,11 @@ function actualizarPantalla() {
     arrayPesos.push(arrayMediciones[i].peso);
     fechaConvertida = new Date(arrayMediciones[i].fecha);
     arrayFechas.push([
-      nombreDias[fechaConvertida.getDay()-1] +
+      nombreDias[fechaConvertida.getDay() - 1] +
         " " +
         fechaConvertida.getDate() +
         "-" +
-        (fechaConvertida.getMonth()+1),
+        (fechaConvertida.getMonth() + 1),
     ]); //? guardo las fechas a mostrar con formato "Dia dd-mm"
   }
   grafico.data.labels = arrayFechas;
