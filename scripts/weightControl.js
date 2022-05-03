@@ -175,11 +175,18 @@ class Persona {
 }
 
 // * ---------------------------- Cosas visuales -----------------------------------
-const nombreDias = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
-const cantidadMuestras = 7; //? Determina las últimas X mediciones a mostrar en el gráfico (podria parametrizarse)
+let nombreDias;
+fetch("./dias.json")
+  .then((respuesta) => respuesta.json())
+  .then((data) => {
+    nombreDias = data.es[0]; //? Defino los días a mostrar en español según archivo dias.json (podría parametrizarse para cambiar idioma)
+    actualizarPantalla();
+  });
+
+const cantidadMuestras = 7; //? Determina las últimas X mediciones a mostrar en el gráfico (podría parametrizarse según pref usuario)
 
 function actualizarPantalla() {
-  //? Renderiza datos en pantalla. Se llama cada vez que cambia algún dato.
+  //? Renderiza datos en pantalla. Se llama al principio y cada vez que cambia algún dato.
   nombreUsuario.innerText = usuario?.nombre;
   alturaUsuario.innerHTML = `${usuario?.altura} cm`;
   infoPantalla[0].innerText = `${usuario?.ultimoPeso()} kg`;
@@ -196,7 +203,7 @@ function actualizarPantalla() {
     arrayPesos.push(arrayMediciones[i].peso);
     fechaConvertida = new Date(arrayMediciones[i].fecha);
     arrayFechas.push([
-      nombreDias[fechaConvertida.getDay() - 1] +
+      nombreDias[fechaConvertida.getDay()] +
         " " +
         fechaConvertida.getDate() +
         "-" +
@@ -275,8 +282,6 @@ usuario = new Persona();
 localStorage.getItem("usuario")
   ? Object.assign(usuario, JSON.parse(localStorage.getItem("usuario")))
   : usuario.crearUsuario();
-
-actualizarPantalla();
 
 nombreUsuario.addEventListener("click", usuario.cambiarNombre);
 alturaUsuario.addEventListener("click", usuario.cambiarAltura);
