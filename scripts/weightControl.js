@@ -183,7 +183,7 @@ fetch("./dias.json")
     actualizarPantalla();
   });
 
-const cantidadMuestras = 7; //? Determina las últimas X mediciones a mostrar en el gráfico (podría parametrizarse según pref usuario)
+const cantidadMuestras = 7; //? Determina el máximo de mediciones a mostrar en el gráfico (podría parametrizarse según pref usuario)
 
 function actualizarPantalla() {
   //? Renderiza datos en pantalla. Se llama al principio y cada vez que cambia algún dato.
